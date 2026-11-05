@@ -2,7 +2,6 @@ package com.hmdp;
 
 import com.hmdp.entity.Shop;
 import com.hmdp.service.impl.ShopServiceImpl;
-import com.hmdp.utils.CacheClient;
 import com.hmdp.utils.RedisIdWorker;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,17 +16,12 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.hmdp.utils.RedisConstants.CACHE_SHOP_KEY;
 import static com.hmdp.utils.RedisConstants.SHOP_GEO_KEY;
 
 @SpringBootTest
 class HmDianPingApplicationTests {
-
-    @Resource
-    private CacheClient cacheClient;
 
     @Resource
     private ShopServiceImpl shopService;
@@ -61,9 +55,9 @@ class HmDianPingApplicationTests {
     }
 
     @Test
-    void testSaveShop() throws InterruptedException {
-        Shop shop = shopService.getById(1L);
-        cacheClient.setWithLogicalExpire(CACHE_SHOP_KEY + 1L, shop, 10L, TimeUnit.SECONDS);
+    void testSaveShop() {
+        // 调用业务层方法，将店铺 1 预热到 Redis
+        shopService.saveShop2Redis(1L, 10L);
     }
 
     @Test

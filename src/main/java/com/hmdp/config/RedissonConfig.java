@@ -13,7 +13,14 @@ public class RedissonConfig {
     public RedissonClient redissonClient(){
         // 配置
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://127.0.0.1:6379");
+        String redisHost = System.getenv().getOrDefault("REDIS_HOST", "127.0.0.1");
+        String redisPort = System.getenv().getOrDefault("REDIS_PORT", "6379");
+        String redisPassword = System.getenv().getOrDefault("REDIS_PASSWORD", "");
+        String redisAddress = "redis://" + redisHost + ":" + redisPort;
+        config.useSingleServer().setAddress(redisAddress);
+        if (!redisPassword.isEmpty()) {
+            config.useSingleServer().setPassword(redisPassword);
+        }
         // 创建RedissonClient对象
         return Redisson.create(config);
     }

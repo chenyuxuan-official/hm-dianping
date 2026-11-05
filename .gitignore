@@ -1,3 +1,10 @@
+# Local secrets and environment overrides
+.env
+.env.*
+application-local.yaml
+application-local.yml
+application-local.properties
+
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
